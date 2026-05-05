@@ -1,6 +1,6 @@
 const levels: Level[] = [
   {
-    level: "Level 1",
+    level: 1,
     image: "/images/level1/image.png",
     difficulty: "Medium",
     characters: [
