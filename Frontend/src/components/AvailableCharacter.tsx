@@ -11,24 +11,24 @@ export default function AvailableChars() {
       }`}
     >
       {data?.characters.map((chars) => {
-        const isSelected = selected.includes(chars.name);
-
+        const isSelected = selected.find(sel=> sel.name===chars.name);
         return (
-          <div key={chars.name} className="relative">
+          <div key={chars.name} className="relative flex flex-col gap-1 items-center justify-center">
             <img
               src={chars.image}
               alt={chars.name}
               className={`h-15 bg-white shadow-sm border ${
-                isSelected ? "border-2 border-green-500 opacity-50 grayscale rounded-md " : "border-transparent rounded-full"
+                isSelected ? "border-2 border-green-500 grayscale rounded-md " : "border-transparent rounded-full"
               }`}
             />
 
             {isSelected && (
               <CheckCircle
-                fontSize="small"
+                fontSize="medium"
                 className="absolute -top-2 -right-2 text-green-500 bg-white rounded-full"
               />
             )}
+            {isSelected && <span className="text-green-500 text-md font-medium">{isSelected.time}s</span>}
           </div>
         );
       })}
