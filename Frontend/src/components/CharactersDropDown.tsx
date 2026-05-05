@@ -1,13 +1,13 @@
 import { useParams } from "react-router-dom";
-import { MatchCharacterPosition, playSound } from "../utils/helper";
-import { useIsMobile, useToast } from "../utils/hooks";
+import { getDurationInSeconds, MatchCharacterPosition, playSound } from "../utils/helper";
+import { useGame, useIsMobile, useToast } from "../utils/hooks";
 
 interface PropsType {
   point: { x: number; y: number } | null;
   open: boolean;
   data: Level | null;
-  selected: string[];
-  setSelected: Setter<string[]>;
+  selected: CharSelection[];
+  setSelected: Setter<CharSelection[]>;
   setOpen: Setter<boolean>;
   onCorrect: (point: { x: number; y: number }) => void;
 }
@@ -26,8 +26,9 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
   const isMobile = useIsMobile();
   const { level } = useParams<string>();
   const toast = useToast();
+  const {start} = useGame();
 
-  const handleSelect = (name: string) => {
+  const handleSelect = (name: string, img:string) => {
     if (!point || !data) return;
 
     const lvl = parseInt(level?.split("+")[1] ?? "0", 10);
@@ -40,15 +41,18 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
     });
 
     if (match) {
-      setSelected((prev) => [...prev, name]);
+      // eslint-disable-next-line react-hooks/purity
+      const end = Date.now();
+      const time = getDurationInSeconds(start, end);
+      setSelected((prev) => [...prev, {name, time}]);
 
-      toast(`You found ${name}`, "success");
+      toast(`You found ${name}`, "success", img);
       playSound("correct");
 
       // Correct answer shows confetti celebration
       onCorrect(point);
     } else {
-      toast(`${name} is not here`, "error");
+      toast(`${name} is not here`, "error", img);
       playSound("wrong");
     }
 
@@ -70,10 +74,10 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
           }}
         >
           {data.characters.map((char: Character, index: number) =>
-            !selected.includes(char.name) ? (
+            !selected.find(sel=> sel.name===char.name) ? (
               <div
                 key={index}
-                onClick={() => handleSelect(char.name)}
+                onClick={() => handleSelect(char.name, char.image)}
                 className="px-3 py-2 border-b border-gray-200 first:rounded-t-[inherit] last:rounded-b-[inherit] last:border-b-0 hover:bg-gray-100 cursor-pointer flex items-center gap-4"
               >
                 <img
@@ -100,10 +104,10 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
             <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-3" />
 
             {data.characters.map((char: Character, index: number) =>
-              !selected.includes(char.name) ? (
+              !selected.find(sel=> sel.name===char.name) ? (
                 <div
                   key={index}
-                  onClick={() => handleSelect(char.name)}
+                  onClick={() => handleSelect(char.name, char.image)}
                   className="px-3 py-3 border-b border-gray-200 last:border-b-0 active:bg-gray-100 cursor-pointer flex items-center justify-between"
                 >
                   <img
