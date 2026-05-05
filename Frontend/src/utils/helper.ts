@@ -1,10 +1,6 @@
 import levels from "../data/levels";
 
-export const createLink = (str: string) => {
-  const result = str.replace(/\s+/g, "").toLowerCase();
-  return `/${result}`;
-};
-
+// Find the current level info
 export const getLevel = (level: number) => {
   const result = levels.find((lvl) => {
     return lvl.level === level;
@@ -12,6 +8,7 @@ export const getLevel = (level: number) => {
   return result;
 };
 
+// Rank Styles
 export function getRankStyle(rank: number) {
   switch (rank) {
     case 1:
@@ -25,6 +22,7 @@ export function getRankStyle(rank: number) {
   }
 }
 
+// Rank Labels
 export function getRankLabel(rank: number) {
   if (rank === 1) return "🥇";
   if (rank === 2) return "🥈";
@@ -32,6 +30,7 @@ export function getRankLabel(rank: number) {
   return `${rank}`;
 }
 
+// Distance Calculator
 import { results } from "../data/results";
 
 export function MatchCharacterPosition({
@@ -60,3 +59,9 @@ export function MatchCharacterPosition({
 
   return distSquared <= tolerance * tolerance;
 }
+
+// sound effects player
+export const playSound = (res: string) => {
+  const audio = res==="correct" ? new Audio("/sounds/correct.mp3") : new Audio("/sounds/wrong.mp3");
+  audio.play();
+};
