@@ -65,3 +65,8 @@ export const playSound = (res: string) => {
   const audio = res==="correct" ? new Audio("/sounds/correct.mp3") : new Audio("/sounds/wrong.mp3");
   audio.play();
 };
+
+// Time calculation 
+export function getDurationInSeconds(start: number, end: number): number {
+  return Math.round(((end - start) / 1000) * 10) / 10;
+}
