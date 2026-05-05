@@ -1,7 +1,7 @@
 export default function CelebrateSVG() {
   return (
     <svg viewBox="0 0 200 200" className="celebrate-svg">
-      {/* 🔥 radial burst */}
+      {/* 🎆 radial burst */}
       <g className="burst">
         {[...Array(12)].map((_, i) => {
           const angle = (i * 360) / 12;
