@@ -13,7 +13,7 @@ interface LeaderboardEntry {
 }
 
 function normalize(name: string) {
-  return name.replace(/\s+/g, "").toLowerCase();
+  return parseInt(name.split("+")[1]);
 }
 
 export default function Leaderboard() {
@@ -21,7 +21,7 @@ export default function Leaderboard() {
   const isMobile = useIsMobile();
 
   const currentLevel = levels.find(
-    (lvl) => normalize(lvl.level) === normalize(level || ""),
+    (lvl) => lvl.level === normalize(level || ""),
   );
 
   const data: LeaderboardEntry[] = [
@@ -62,7 +62,7 @@ export default function Leaderboard() {
     <div className="w-full mx-auto flex justify-center bg-white py-10">
       <div className="w-full xl:max-w-7xl md:max-w-5xl">
         <h1 className="text-2xl font-bold px-4 mb-6 text-black text-3xl!">
-          {currentLevel.level} Leaderboard
+          Level - {currentLevel.level} Leaderboard
         </h1>
 
         {/* ================= MOBILE VIEW ================= */}
