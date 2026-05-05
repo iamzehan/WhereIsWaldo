@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState, useRef, useCallback } from 'react';
+import { useEffect, useContext, useState, useRef, useCallback } from "react";
 
 // Mobile device detection hook
 export const useIsMobile = (breakpoint = 768) => {
@@ -21,10 +21,8 @@ export const useIsMobile = (breakpoint = 768) => {
   return isMobile;
 };
 
-
-
 export const useScrollTo = (
-  options: ScrollIntoViewOptions = { behavior: 'smooth', block: 'start' }
+  options: ScrollIntoViewOptions = { behavior: "smooth", block: "start" },
 ) => {
   const targetRef = useRef<HTMLDivElement | null>(null);
 
@@ -36,7 +34,7 @@ export const useScrollTo = (
 };
 
 // Game Context Provider
-import GameContext from './GameContext';
+import GameContext from "./GameContext";
 
 export function useGame() {
   const context = useContext(GameContext);
@@ -44,4 +42,13 @@ export function useGame() {
     throw new Error("useGame must be used within GameProvider");
   }
   return context;
+}
+
+// Toast Context Provider
+import ToastContext from "./ToastContext";
+
+export function useToast() {
+  const ctx = useContext(ToastContext);
+  if (!ctx) throw new Error("useToast must be used inside ToastProvider");
+  return ctx.toast;
 }

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import { MatchCharacterPosition } from "../utils/helper";
-import { useIsMobile } from "../utils/hooks";
+import { MatchCharacterPosition, playSound } from "../utils/helper";
+import { useIsMobile, useToast } from "../utils/hooks";
 
 interface PropsType {
   point: { x: number; y: number } | null;
@@ -15,6 +15,7 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
   const { point, open, data, selected, setSelected, setOpen } = props;
   const isMobile = useIsMobile();
   const { level } = useParams<string>();
+  const toast = useToast();
 
   const handleSelect = (name: string) => {
     if (!point) return;
@@ -29,6 +30,11 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
 
     if (match) {
       setSelected([...selected, name]);
+      toast(`You found ${name}`, "success")
+      playSound("correct");
+    } else {
+      toast(`${name} is not here`, "error")
+      playSound("wrong")
     }
 
     setOpen(false);
@@ -53,7 +59,7 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
               <div
                 key={index}
                 onClick={() => handleSelect(char.name)}
-                className="px-3 py-1 border-b border-gray-200 hover:bg-gray-100 cursor-pointer text-black flex items-center justify-center gap-5"
+                className="px-3 py-1 border-b border-gray-200 last:border-b-0 hover:bg-gray-100 cursor-pointer text-black flex items-center justify-center gap-5"
               >
                 <img
                   src={char.image}
@@ -100,10 +106,10 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
                 >
                   <img
                     src={char.image}
-                    className="h-10 w-10 rounded-full"
+                    className="h-20 w-20 rounded-full p-1 border-3 border-gray-200/50"
                     alt={char.name}
                   />
-                  <span>{char.name}</span>
+                  <span className="text-2xl font-semibold">{char.name}</span>
                 </div>
               ) : null,
             )}
