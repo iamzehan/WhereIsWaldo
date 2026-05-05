@@ -1,21 +1,24 @@
+/* eslint-disable react-hooks/purity */
 import { createContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getLevel } from "./helper";
 
+
 type GameContextType = {
   data: Level | null;
-  selected: string[];
-  setSelected: React.Dispatch<React.SetStateAction<string[]>>;
+  selected: CharSelection[];
+  setSelected: React.Dispatch<React.SetStateAction<CharSelection[]>>;
   complete: boolean;
+  start: number;
 };
 
 const GameContext = createContext<GameContextType | null>(null);
 
 export function GameProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState<Level | null>(null);
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<CharSelection[]>([]);
   const [complete, setComplete] = useState<boolean>(false);
-
+  const [start] = useState<number>(Date.now());
   const { level } = useParams<string>();
 
   useEffect(() => {
@@ -33,7 +36,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   }, [selected,data])
 
   return (
-    <GameContext.Provider value={{ data, selected, setSelected, complete }}>
+    <GameContext.Provider value={{ data, selected, setSelected, complete, start }}>
       {children}
     </GameContext.Provider>
   );
