@@ -5,7 +5,7 @@ export default function TopBar() {
     <div className="flex flex-wrap items-center justify-center shadow shadow-b w-screen p-5">
       <a href="/" className="flex gap-2 items-center justify-center">
         <img
-          src="https://whereiswaldo.com/assets/icons/waldoheader.png"
+          src="/favicon.png"
           alt="Waldo Icon"
           className="h-15 md:h-20"
         />
