@@ -9,7 +9,7 @@ export default function LevelCards( {levels}: {levels: Level[]}) {
           <article
             onClick={()=> navigate(`level+${lvl.level}`)}
             key={index}
-            className="level-card w-[33%] max-w-full shadow-lg"
+            className="level-card w-full shadow-lg transition-transform duration-300 ease-in-out hover:-translate-y-5"
             data-link={`${lvl.level}.html`}
           >
             <img src={lvl.image} alt="level" className="object-contain rounded-t-[inherit]" />
