@@ -30,3 +30,79 @@ table {
         user-select: none;
     }
 }
+
+/* Celebrate Animation */
+.celebrate-svg {
+  width: 160px;
+  aspect-ratio: 1;
+  overflow: visible;
+}
+
+/* 🔥 radial lines */
+.burst-line {
+  stroke: gold;
+  stroke-width: 3;
+  transform-origin: 100px 100px;
+  animation: burst 0.6s ease-out forwards;
+}
+
+@keyframes burst {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* 🎉 confetti */
+.confetti {
+  fill: red;
+  transform-origin: 100px 100px;
+  animation: confetti 0.8s ease-out forwards;
+}
+
+/* color variation */
+.confetti:nth-child(1) { fill: #ff4d4d; }
+.confetti:nth-child(2) { fill: #4dff88; }
+.confetti:nth-child(3) { fill: #4da6ff; }
+.confetti:nth-child(4) { fill: #ffd24d; }
+.confetti:nth-child(5) { fill: #b84dff; }
+.confetti:nth-child(6) { fill: #ff944d; }
+.confetti:nth-child(7) { fill: #4dffff; }
+.confetti:nth-child(8) { fill: #ff4da6; }
+.confetti:nth-child(9) { fill: #66ff66; }
+.confetti:nth-child(10) { fill: #ffffff; }
+
+@keyframes confetti {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80px);
+  }
+}
+
+/* 💥 center pop */
+.pop {
+  fill: orange;
+  transform-origin: 100px 100px;
+  animation: pop 0.5s ease-out forwards;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0);
+  }
+  60% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
