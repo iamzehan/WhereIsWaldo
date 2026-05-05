@@ -48,7 +48,7 @@ export default function MainImage() {
     // Wrapper
     <div
       ref={containerRef}
-      className="relative w-full flex md:justify-center xl:justify-center"
+      className="relative w-full flex md:justify-center xl:justify-center overflow-x-auto"
     >
       {/* Main Image */}
       <img
