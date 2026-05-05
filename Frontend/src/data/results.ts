@@ -3,7 +3,7 @@ export const results = [
         level: 1,
         results: [
             {
-                name: "Walden",
+                name: "Odlaw",
                 x: 0.25,
                 y: 0.48
             }, 
