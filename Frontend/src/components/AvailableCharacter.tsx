@@ -6,7 +6,7 @@ export default function AvailableChars() {
   const {selected, data} = useGame();
   return (
     <div
-      className={`flex w-full justify-center p-10 gap-10 ${
+      className={`flex w-full z-10 justify-center p-10 gap-10 ${
         isMobile ? "sticky top-0 gap-2" : ""
       }`}
     >
