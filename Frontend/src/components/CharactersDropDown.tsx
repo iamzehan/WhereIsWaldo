@@ -9,8 +9,6 @@ interface PropsType {
   selected: string[];
   setSelected: Setter<string[]>;
   setOpen: Setter<boolean>;
-
-  // 🔥 new
   onCorrect: (point: { x: number; y: number }) => void;
 }
 
@@ -47,7 +45,7 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
       toast(`You found ${name}`, "success");
       playSound("correct");
 
-      // 🔥 notify parent → triggers overlay
+      // Correct answer shows confetti celebration
       onCorrect(point);
     } else {
       toast(`${name} is not here`, "error");
@@ -61,7 +59,7 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
 
   return (
     <>
-      {/* DESKTOP */}
+      {/* DESKTOP dropdown */}
       {!isMobile && (
         <div
           className="absolute z-10 bg-white border shadow-md rounded-xl w-44 text-lg"
@@ -90,7 +88,7 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
         </div>
       )}
 
-      {/* MOBILE */}
+      {/* MOBILE Drawer */}
       {isMobile && (
         <div className="fixed inset-0 z-50">
           <div
