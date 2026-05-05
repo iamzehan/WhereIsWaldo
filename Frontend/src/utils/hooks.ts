@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useContext, useState, useRef, useCallback } from 'react';
 
 // Mobile device detection hook
 export const useIsMobile = (breakpoint = 768) => {
@@ -34,3 +34,14 @@ export const useScrollTo = (
 
   return { targetRef, scrollToTarget };
 };
+
+// Game Context Provider
+import GameContext from './GameContext';
+
+export function useGame() {
+  const context = useContext(GameContext);
+  if (!context) {
+    throw new Error("useGame must be used within GameProvider");
+  }
+  return context;
+}

@@ -2,10 +2,10 @@ import BurgerMenu from "./BurgerMenu";
 
 export default function TopBar() {
   return (
-    <div className="flex flex-wrap items-center justify-center shadow shadow-b w-screen p-5">
+    <div className="flex flex-wrap items-center justify-center shadow w-screen shadow-b p-5">
       <a href="/" className="flex gap-2 items-center justify-center">
         <img
-          src="https://whereiswaldo.com/assets/icons/waldoheader.png"
+          src="/favicon.png"
           alt="Waldo Icon"
           className="h-15 md:h-20"
         />

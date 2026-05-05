@@ -8,13 +8,13 @@ export default function BurgerMenu() {
     <nav className="w-full">
       
       {/* Top bar */}
-      <div className="flex flex-wrap justify-between items-center">
+      <div className="flex flex-wrap1 justify-between items-center">
         <div className="font-bold text-lg">Menu</div>
 
         {/* Burger Button (mobile only) */}
         <button
           onClick={() => setOpen(!open)}
-          className="md:hidden flex flex-col gap-1 fixed right-5 bg-gray-50 p-2 rounded top-5"
+          className="md:hidden flex flex-col gap-1 bg-gray-50 p-2 rounded"
         >
           <span className="w-6 h-0.5 bg-black"></span>
           <span className="w-6 h-0.5 bg-black"></span>
