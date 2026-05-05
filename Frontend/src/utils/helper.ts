@@ -5,9 +5,9 @@ export const createLink = (str: string) => {
   return `/${result}`;
 };
 
-export const getLevel = (str: string) => {
+export const getLevel = (level: number) => {
   const result = levels.find((lvl) => {
-    return lvl.level.replace(/\s+/g, "").toLowerCase() === str;
+    return lvl.level === level;
   });
   return result;
 };
@@ -30,4 +30,33 @@ export function getRankLabel(rank: number) {
   if (rank === 2) return "🥈";
   if (rank === 3) return "🥉";
   return `${rank}`;
+}
+
+import { results } from "../data/results";
+
+export function MatchCharacterPosition({
+  data,
+}: {
+  data: { level: number; results: CharacterPositions };
+}): boolean {
+  const tolerance = 0.02;
+
+  const characterPosition = results
+    .find((res) => res.level === data.level)
+    ?.results.find((res) => res.name === data.results.name);
+
+  if (!characterPosition) return false;
+
+  const selectedX = data.results.x;
+  const selectedY = data.results.y;
+
+  const actualX = characterPosition.x;
+  const actualY = characterPosition.y;
+
+  const distX = selectedX - actualX;
+  const distY = selectedY - actualY;
+
+  const distSquared = distX * distX + distY * distY;
+
+  return distSquared <= tolerance * tolerance;
 }
