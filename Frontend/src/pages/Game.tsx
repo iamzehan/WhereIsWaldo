@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { getLevel } from "../utils/helper";
 import Leaderboard from "../components/LeaderBoard";
 import { useIsMobile } from "../utils/hooks";
+import MainImage from "../components/MainImage";
+import AvailableChars from "../components/AvailableCharacter";
 
 export default function Page() {
   const [data, setData] = useState<Level | null>(null);
@@ -19,19 +21,9 @@ export default function Page() {
   return (
     <div className="flex flex-col">
       {/* Characters */}
-      <div className={`flex gap-10 w-full justify-center p-10 ${isMobile? "sticky top-0 gap-2!": ""}`}>
-        {data?.characters.map((chars) => {
-          return <img src={chars.image} alt={chars.name} className="h-15 rounded-full bg-white shadow-sm" />;
-        })}
-      </div>
+      <AvailableChars data={data} />
       {/* Main Image */}
-      <div className="w-full overflow-x-auto flex md:justify-center xl:justify-center">
-        <img
-          src={data?.image}
-          alt={`${level}_image`}
-          className="max-w-none md:w-5xl xl:w-7xl sm:w-full border-1 border-gray-200"
-        />
-      </div>
+      <MainImage data={data} />
       {/* Leader board */}
       <Leaderboard />
     </div>
