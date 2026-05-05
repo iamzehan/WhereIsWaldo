@@ -17,7 +17,7 @@ export default function MainImage() {
   const [point, setPoint] = useState<ClickPoint | null>(null);
   const [open, setOpen] = useState(false);
 
-  // 🔥 celebration state lives HERE
+  // Celebration State for Confetti animation
   const [celebratePoint, setCelebratePoint] = useState<ClickPoint | null>(null);
 
   const { selected, setSelected, data } = useGame();
@@ -58,7 +58,7 @@ export default function MainImage() {
           className="max-w-none md:w-5xl xl:w-7xl sm:w-full cursor-crosshair"
         />
 
-        {/* ✅ OVERLAY now tied to IMAGE */}
+        {/* Confetti Celebration on correct answer selection */}
         {celebratePoint && (
           <div
             className="absolute z-50 pointer-events-none"
@@ -83,7 +83,7 @@ export default function MainImage() {
           setSelected,
           setOpen,
 
-          // 🔥 pass handler DOWN
+          // Handler for Confetti animation
           onCorrect: (p: ClickPoint) => {
             setCelebratePoint(p);
 
