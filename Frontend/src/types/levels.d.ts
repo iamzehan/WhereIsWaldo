@@ -10,7 +10,7 @@ interface Character {
 }
 
 interface Level {
-  level: string;
+  level: number;
   image: string;
   difficulty: Difficulty;
   characters: Character[];
