@@ -52,7 +52,14 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Session: 'Session',
-  User: 'User'
+  User: 'User',
+  Game: 'Game',
+  MainImage: 'MainImage',
+  Characters: 'Characters',
+  CharactersOnGame: 'CharactersOnGame',
+  Results: 'Results',
+  Logs: 'Logs',
+  LeaderBoard: 'LeaderBoard'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -83,6 +90,7 @@ export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeo
 
 export const UserScalarFieldEnum = {
   id: 'id',
+  username: 'username',
   email: 'email',
   password: 'password',
   createdAt: 'createdAt',
@@ -90,6 +98,74 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const GameScalarFieldEnum = {
+  id: 'id',
+  level: 'level',
+  image_id: 'image_id'
+} as const
+
+export type GameScalarFieldEnum = (typeof GameScalarFieldEnum)[keyof typeof GameScalarFieldEnum]
+
+
+export const MainImageScalarFieldEnum = {
+  id: 'id',
+  src: 'src',
+  game_id: 'game_id'
+} as const
+
+export type MainImageScalarFieldEnum = (typeof MainImageScalarFieldEnum)[keyof typeof MainImageScalarFieldEnum]
+
+
+export const CharactersScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  image: 'image'
+} as const
+
+export type CharactersScalarFieldEnum = (typeof CharactersScalarFieldEnum)[keyof typeof CharactersScalarFieldEnum]
+
+
+export const CharactersOnGameScalarFieldEnum = {
+  game_id: 'game_id',
+  char_id: 'char_id'
+} as const
+
+export type CharactersOnGameScalarFieldEnum = (typeof CharactersOnGameScalarFieldEnum)[keyof typeof CharactersOnGameScalarFieldEnum]
+
+
+export const ResultsScalarFieldEnum = {
+  id: 'id',
+  game_id: 'game_id',
+  char_id: 'char_id',
+  pos_x: 'pos_x',
+  pos_y: 'pos_y'
+} as const
+
+export type ResultsScalarFieldEnum = (typeof ResultsScalarFieldEnum)[keyof typeof ResultsScalarFieldEnum]
+
+
+export const LogsScalarFieldEnum = {
+  id: 'id',
+  game_id: 'game_id',
+  user_id: 'user_id',
+  start: 'start',
+  end: 'end'
+} as const
+
+export type LogsScalarFieldEnum = (typeof LogsScalarFieldEnum)[keyof typeof LogsScalarFieldEnum]
+
+
+export const LeaderBoardScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
+  game_id: 'game_id',
+  comment: 'comment',
+  time: 'time'
+} as const
+
+export type LeaderBoardScalarFieldEnum = (typeof LeaderBoardScalarFieldEnum)[keyof typeof LeaderBoardScalarFieldEnum]
 
 
 export const SortOrder = {

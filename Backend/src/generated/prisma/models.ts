@@ -10,4 +10,11 @@
  */
 export type * from './models/Session.js'
 export type * from './models/User.js'
+export type * from './models/Game.js'
+export type * from './models/MainImage.js'
+export type * from './models/Characters.js'
+export type * from './models/CharactersOnGame.js'
+export type * from './models/Results.js'
+export type * from './models/Logs.js'
+export type * from './models/LeaderBoard.js'
 export type * from './commonInputTypes.js'

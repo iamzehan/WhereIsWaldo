@@ -27,3 +27,38 @@ export type Session = Prisma.SessionModel
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Game
+ * 
+ */
+export type Game = Prisma.GameModel
+/**
+ * Model MainImage
+ * 
+ */
+export type MainImage = Prisma.MainImageModel
+/**
+ * Model Characters
+ * 
+ */
+export type Characters = Prisma.CharactersModel
+/**
+ * Model CharactersOnGame
+ * 
+ */
+export type CharactersOnGame = Prisma.CharactersOnGameModel
+/**
+ * Model Results
+ * 
+ */
+export type Results = Prisma.ResultsModel
+/**
+ * Model Logs
+ * 
+ */
+export type Logs = Prisma.LogsModel
+/**
+ * Model LeaderBoard
+ * 
+ */
+export type LeaderBoard = Prisma.LeaderBoardModel

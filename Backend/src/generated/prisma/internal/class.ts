@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\n// Session \nmodel Session {\n  id        String   @id @default(cuid())\n  sid       String   @unique\n  data      String\n  expiresAt DateTime\n}\n\nmodel User {\n  id        String   @id @default(uuid())\n  email     String   @unique\n  password  String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\n// Session \nmodel Session {\n  id        String   @id @default(cuid())\n  sid       String   @unique\n  data      String\n  expiresAt DateTime\n}\n\nmodel User {\n  id        String   @id @default(uuid())\n  username  String   @unique\n  email     String   @unique\n  password  String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  leaderboard LeaderBoard[]\n  logs        Logs[]\n}\n\n// One to one with 'MainImage' table\nmodel Game {\n  id           String             @id @default(uuid())\n  level        Int                @unique @default(autoincrement())\n  image_id     String             @unique\n  image        MainImage?\n  result       Results[]\n  characters   CharactersOnGame[]\n  leaderboards LeaderBoard[]\n  logs         Logs[]\n}\n\n// One to one with 'Game' table [Game<--1-----1-->MainImage]\nmodel MainImage {\n  id      String @id @unique @default(uuid())\n  src     String\n  game_id String @unique\n  game    Game   @relation(fields: [game_id], references: [id])\n}\n\n// Many to many with 'Game'\nmodel Characters {\n  id      String             @id @unique @default(uuid())\n  name    String             @unique\n  image   String             @unique\n  games   CharactersOnGame[]\n  results Results[]\n}\n\n// Relational Table Characters <-*-----*-> Game\nmodel CharactersOnGame {\n  game_id   String\n  char_id   String\n  game      Game       @relation(fields: [game_id], references: [id])\n  character Characters @relation(fields: [char_id], references: [id])\n\n  @@id([game_id, char_id])\n}\n\n// Results [Game <-- 1 ----- *--> Results], [Character <-- 1 ----- *--> Results]\nmodel Results {\n  id        String     @unique @default(uuid())\n  game_id   String\n  char_id   String\n  pos_x     Int\n  pos_y     Int\n  game      Game       @relation(fields: [game_id], references: [id])\n  character Characters @relation(fields: [char_id], references: [id])\n}\n\n// Logs\n\nmodel Logs {\n  id      String   @unique @default(uuid())\n  game_id String\n  user_id String\n  start   DateTime @default(now())\n  end     DateTime\n\n  user User @relation(fields: [user_id], references: [id])\n  game Game @relation(fields: [game_id], references: [id])\n}\n\n// Leaderboard\n\nmodel LeaderBoard {\n  id      String @unique @default(uuid())\n  user_id String\n  game_id String\n  comment String\n  time    Int\n\n  game Game @relation(fields: [game_id], references: [id])\n  user User @relation(fields: [user_id], references: [id])\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"data\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"data\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"leaderboard\",\"kind\":\"object\",\"type\":\"LeaderBoard\",\"relationName\":\"LeaderBoardToUser\"},{\"name\":\"logs\",\"kind\":\"object\",\"type\":\"Logs\",\"relationName\":\"LogsToUser\"}],\"dbName\":null},\"Game\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"level\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"image_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"image\",\"kind\":\"object\",\"type\":\"MainImage\",\"relationName\":\"GameToMainImage\"},{\"name\":\"result\",\"kind\":\"object\",\"type\":\"Results\",\"relationName\":\"GameToResults\"},{\"name\":\"characters\",\"kind\":\"object\",\"type\":\"CharactersOnGame\",\"relationName\":\"CharactersOnGameToGame\"},{\"name\":\"leaderboards\",\"kind\":\"object\",\"type\":\"LeaderBoard\",\"relationName\":\"GameToLeaderBoard\"},{\"name\":\"logs\",\"kind\":\"object\",\"type\":\"Logs\",\"relationName\":\"GameToLogs\"}],\"dbName\":null},\"MainImage\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"src\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"game_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"game\",\"kind\":\"object\",\"type\":\"Game\",\"relationName\":\"GameToMainImage\"}],\"dbName\":null},\"Characters\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"games\",\"kind\":\"object\",\"type\":\"CharactersOnGame\",\"relationName\":\"CharactersToCharactersOnGame\"},{\"name\":\"results\",\"kind\":\"object\",\"type\":\"Results\",\"relationName\":\"CharactersToResults\"}],\"dbName\":null},\"CharactersOnGame\":{\"fields\":[{\"name\":\"game_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"char_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"game\",\"kind\":\"object\",\"type\":\"Game\",\"relationName\":\"CharactersOnGameToGame\"},{\"name\":\"character\",\"kind\":\"object\",\"type\":\"Characters\",\"relationName\":\"CharactersToCharactersOnGame\"}],\"dbName\":null},\"Results\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"game_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"char_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pos_x\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"pos_y\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"game\",\"kind\":\"object\",\"type\":\"Game\",\"relationName\":\"GameToResults\"},{\"name\":\"character\",\"kind\":\"object\",\"type\":\"Characters\",\"relationName\":\"CharactersToResults\"}],\"dbName\":null},\"Logs\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"game_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"start\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"end\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"LogsToUser\"},{\"name\":\"game\",\"kind\":\"object\",\"type\":\"Game\",\"relationName\":\"GameToLogs\"}],\"dbName\":null},\"LeaderBoard\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"game_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"comment\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"time\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"game\",\"kind\":\"object\",\"type\":\"Game\",\"relationName\":\"GameToLeaderBoard\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"LeaderBoardToUser\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -193,6 +193,76 @@ export interface PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.game`: Exposes CRUD operations for the **Game** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Games
+    * const games = await prisma.game.findMany()
+    * ```
+    */
+  get game(): Prisma.GameDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.mainImage`: Exposes CRUD operations for the **MainImage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MainImages
+    * const mainImages = await prisma.mainImage.findMany()
+    * ```
+    */
+  get mainImage(): Prisma.MainImageDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.characters`: Exposes CRUD operations for the **Characters** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Characters
+    * const characters = await prisma.characters.findMany()
+    * ```
+    */
+  get characters(): Prisma.CharactersDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.charactersOnGame`: Exposes CRUD operations for the **CharactersOnGame** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CharactersOnGames
+    * const charactersOnGames = await prisma.charactersOnGame.findMany()
+    * ```
+    */
+  get charactersOnGame(): Prisma.CharactersOnGameDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.results`: Exposes CRUD operations for the **Results** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Results
+    * const results = await prisma.results.findMany()
+    * ```
+    */
+  get results(): Prisma.ResultsDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.logs`: Exposes CRUD operations for the **Logs** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Logs
+    * const logs = await prisma.logs.findMany()
+    * ```
+    */
+  get logs(): Prisma.LogsDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.leaderBoard`: Exposes CRUD operations for the **LeaderBoard** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LeaderBoards
+    * const leaderBoards = await prisma.leaderBoard.findMany()
+    * ```
+    */
+  get leaderBoard(): Prisma.LeaderBoardDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

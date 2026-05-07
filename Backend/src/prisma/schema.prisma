@@ -23,8 +23,87 @@ model Session {
 
 model User {
   id        String   @id @default(uuid())
+  username  String   @unique
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  leaderboard LeaderBoard[]
+  logs Logs[]
+}
+
+// One to one with 'MainImage' table
+model Game {
+  id String @id @default(uuid())
+  level Int @unique @default(autoincrement())
+  image_id String @unique
+  image MainImage?
+  result Results[]
+  characters CharactersOnGame[]
+  leaderboards LeaderBoard[]
+  logs Logs[]
+}
+// One to one with 'Game' table [Game<--1-----1-->MainImage]
+model MainImage {
+  id String @id @unique @default(uuid())
+  src String
+  game_id String @unique
+  game Game @relation(fields: [game_id], references: [id])
+}
+
+// Many to many with 'Game'
+model Characters {
+  id String @id @unique @default(uuid())
+  name String @unique
+  image String @unique
+  games CharactersOnGame[]
+  results Results[]
+}
+
+// Relational Table Characters <-*-----*-> Game
+model CharactersOnGame {
+  game_id String
+  char_id String
+  game Game @relation(fields: [game_id], references: [id])
+  character Characters @relation(fields: [char_id], references: [id])
+  @@id([game_id, char_id])
+}
+
+// Results [Game <-- 1 ----- *--> Results], [Character <-- 1 ----- *--> Results]
+model Results {
+  id String @unique @default(uuid())
+  game_id String
+  char_id String
+  pos_x Int
+  pos_y Int
+  game Game @relation(fields: [game_id], references: [id])
+  character Characters @relation(fields: [char_id], references: [id])
+}
+
+// Logs
+
+model Logs {
+  id String @unique @default(uuid())
+  game_id String
+  user_id String
+  start DateTime @default(now())
+  end DateTime
+
+  user User @relation(fields: [user_id], references: [id])
+  game Game @relation(fields: [game_id], references: [id])
+
+}
+
+// Leaderboard
+
+model LeaderBoard{
+  id String @unique @default(uuid())
+  user_id String
+  game_id String
+  comment String
+  time Int
+
+  game Game @relation(fields: [game_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
 }
