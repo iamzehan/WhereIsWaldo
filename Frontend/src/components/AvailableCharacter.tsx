@@ -28,7 +28,8 @@ export default function AvailableChars() {
                 className="absolute -top-2 -right-2 text-green-500 bg-white rounded-full"
               />
             )}
-            {isSelected && <span className="text-green-500 text-md font-medium">{isSelected.time}s</span>}
+            <span className="text-green-500 text-md font-medium h-5 bg-gray-50 rounded-full w-full
+             flex items-center justify-center">{isSelected? isSelected.time+"s" : ""}</span>
           </div>
         );
       })}
