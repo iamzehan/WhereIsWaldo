@@ -4,10 +4,11 @@ import { hashPassword, comparePassword } from "../utils/password.js";
 import { signAccessToken, signRefreshToken } from "../utils/jwt.js";
 
 export const register = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { username, email, password } = req.body;
 
   const user = await prisma.user.create({
     data: {
+      username,
       email,
       password: await hashPassword(password)
     }
