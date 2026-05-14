@@ -37,13 +37,20 @@ model User {
 model Game {
   id String @id @default(uuid())
   level Int @unique @default(autoincrement())
-  image_id String @unique
+  difficulty Difficulty
   image MainImage?
   result Results[]
   characters CharactersOnGame[]
   leaderboards LeaderBoard[]
   logs Logs[]
 }
+
+enum Difficulty {
+  Easy
+  Medium
+  Hard
+}
+
 // One to one with 'Game' table [Game<--1-----1-->MainImage]
 model MainImage {
   id String @id @unique @default(uuid())
@@ -79,6 +86,7 @@ model Results {
   pos_y Int
   game Game @relation(fields: [game_id], references: [id])
   character Characters @relation(fields: [char_id], references: [id])
+  @@unique([game_id, char_id])
 }
 
 // Logs
