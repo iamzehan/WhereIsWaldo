@@ -5,7 +5,7 @@ import { useGame, useIsMobile, useToast } from "../utils/hooks";
 interface PropsType {
   point: { x: number; y: number } | null;
   open: boolean;
-  data: Level | null;
+  data: Game | null;
   selected: CharSelection[];
   setSelected: Setter<CharSelection[]>;
   setOpen: Setter<boolean>;
@@ -73,19 +73,19 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
             transform: "translate(10%, 10%)",
           }}
         >
-          {data.characters.map((char: Character, index: number) =>
-            !selected.find(sel=> sel.name===char.name) ? (
+          {data.characters.map((char: CharactersOnGame, index: number) =>
+            !selected.find(sel=> sel.name===char.character.name) ? (
               <div
                 key={index}
-                onClick={() => handleSelect(char.name, char.image)}
+                onClick={() => handleSelect(char.character.name, char.character.image)}
                 className="px-3 py-2 border-b border-gray-200 first:rounded-t-[inherit] last:rounded-b-[inherit] last:border-b-0 hover:bg-gray-100 cursor-pointer flex items-center gap-4"
               >
                 <img
-                  src={char.image}
+                  src={char.character.image}
                   className="h-10 w-10 rounded-full"
-                  alt={char.name}
+                  alt={char.character.name}
                 />
-                <span className="text-black">{char.name}</span>
+                <span className="text-black">{char.character.name}</span>
               </div>
             ) : null
           )}
@@ -103,20 +103,20 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
           <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-4 h-[50vh]">
             <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-3" />
 
-            {data.characters.map((char: Character, index: number) =>
-              !selected.find(sel=> sel.name===char.name) ? (
+            {data.characters.map((char: CharactersOnGame, index: number) =>
+              !selected.find(sel=> sel.name===char.character.name) ? (
                 <div
                   key={index}
-                  onClick={() => handleSelect(char.name, char.image)}
+                  onClick={() => handleSelect(char.character.name, char.character.image)}
                   className="px-3 py-3 border-b border-gray-200 last:border-b-0 active:bg-gray-100 cursor-pointer flex items-center justify-between"
                 >
                   <img
-                    src={char.image}
+                    src={char.character.image}
                     className="h-16 w-16 rounded-full"
-                    alt={char.name}
+                    alt={char.character.name}
                   />
                   <span className="text-xl font-semibold text-black">
-                    {char.name}
+                    {char.character.name}
                   </span>
                 </div>
               ) : null
