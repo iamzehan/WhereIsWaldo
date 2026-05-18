@@ -53,7 +53,7 @@ export default function MainImage() {
         <img
           ref={imgRef}
           onClick={handleClick}
-          src={data?.image}
+          src={data?.image?.src}
           alt={`Level-${data?.level} image`}
           className="max-w-none md:w-5xl xl:w-7xl sm:w-full cursor-crosshair"
         />
