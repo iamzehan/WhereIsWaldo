@@ -1,42 +1,84 @@
-/* eslint-disable react-hooks/purity */
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getLevel } from "./helper";
-
+import { getOneGame } from "./requests.game";
 
 type GameContextType = {
-  data: Level | null;
+  data: Game | null;
   selected: CharSelection[];
   setSelected: React.Dispatch<React.SetStateAction<CharSelection[]>>;
   complete: boolean;
   start: number;
+  isLoading: boolean;
+  isError: boolean;
 };
 
 const GameContext = createContext<GameContextType | null>(null);
 
-export function GameProvider({ children }: { children: React.ReactNode }) {
-  const [data, setData] = useState<Level | null>(null);
+export function GameProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [data, setData] = useState<Game | null>(null);
   const [selected, setSelected] = useState<CharSelection[]>([]);
-  const [complete, setComplete] = useState<boolean>(false);
-  const [start] = useState<number>(Date.now());
-  const { level } = useParams<string>();
+  const [isLoading, setLoading] = useState(true);
+  const [isError, setError] = useState(false);
+
+  const [start] = useState(Date.now());
+
+  const { level } = useParams();
 
   useEffect(() => {
-    if (level) {
-      const lvl = parseInt(level.split("+")[1]);
-      const levelData = getLevel(lvl);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setData(levelData || null);
-    }
+    let mounted = true;
+
+    const fetchData = async () => {
+      if (!level) return;
+
+      setLoading(true);
+      setError(false);
+
+      try {
+        const lvl = level.split("+")[1];
+        
+        const res = await getOneGame(true, lvl);
+
+        if (mounted) {
+          setData(res);
+        }
+      } catch {
+        if (mounted) {
+          setError(true);
+        }
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      mounted = false;
+    };
   }, [level]);
 
-  useEffect(()=> {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if(data?.characters.length===selected.length) setComplete(true);
-  }, [selected,data])
+  const complete = useMemo(() => {
+    return !!data && data.characters.length === selected.length;
+  }, [data, selected]);
 
   return (
-    <GameContext.Provider value={{ data, selected, setSelected, complete, start }}>
+    <GameContext.Provider
+      value={{
+        data,
+        selected,
+        setSelected,
+        complete,
+        start,
+        isLoading,
+        isError,
+      }}
+    >
       {children}
     </GameContext.Provider>
   );
