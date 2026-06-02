@@ -7,18 +7,40 @@ import {env} from '../config/env.js';
 
 export const register = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
-  try{
-  const user = await prisma.user.create({
-    data: {
-      username,
-      email,
-      password: await hashPassword(password)
+
+  try {
+    // 1. Check if user already exists
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [{ username }, { email }],
+      },
+    });
+
+    if (existingUser) {
+      return res.status(409).json({
+        message: "User already exists",
+        field: existingUser.username === username ? "username" : "email",
+      });
     }
-  });
-  res.status(201).json({ id: user.id });
-} catch(err){
-  res.status(500).json({message: err});
-}
+
+    // 2. Create user
+    const user = await prisma.user.create({
+      data: {
+        username,
+        email,
+        password: await hashPassword(password),
+      },
+    });
+
+    return res.status(201).json({
+      id: user.id,
+      username: user.username,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
 };
 
 export const login = async (req: Request, res: Response) => {
@@ -46,9 +68,29 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const refresh =  (req: Request, res: Response) => {
+  try{
   const token = req.cookies.refreshToken;
   if (!token) return res.sendStatus(401);
   const payload = jwt.verify(token, env.JWT_REFRESH_SECRET) as { sub: string };
   const newAccessToken = signAccessToken(payload.sub);
   res.json({ accessToken: newAccessToken });
+  }catch(err){
+    console.log(err);
+  }
 }
+
+
+export const me = async (req: Request, res: Response) => {
+  try {
+    const user = await prisma.user.findUnique({
+      select: {username: true, email: true},
+      where: {
+        id:req.userId
+      }
+    })
+
+    return res.status(200).json(user);
+  } catch (err) {
+    return res.status(500).json({ message: "Server error" });
+  }
+};
