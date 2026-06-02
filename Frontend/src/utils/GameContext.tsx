@@ -6,9 +6,11 @@ import { useAuth } from "./hooks";
 type GameContextType = {
   data: Game | null;
   selected: CharSelection[];
-  setSelected: React.Dispatch<React.SetStateAction<CharSelection[]>>;
+  setSelected: Setter<CharSelection[]>;
   complete: boolean;
-  start: number;
+  start?: number | null;
+  end?: number | null;
+  setEnd: Setter<number | null>; 
   isLoading: boolean;
   isError: boolean;
 };
@@ -22,7 +24,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [isError, setError] = useState(false);
   const { accessToken } = useAuth();
 
-  const [start] = useState(Date.now());
+  // Start end
+  const [start, setStart] = useState<number | null>(null);
+  const [end, setEnd] = useState<number | null> (null);
 
   const { level } = useParams();
 
@@ -42,6 +46,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
           if (mounted) {
             setData(res);
+            setStart(Date.now())
           }
         }
       } catch {
@@ -74,6 +79,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         setSelected,
         complete,
         start,
+        end,
+        setEnd,
         isLoading,
         isError,
       }}
