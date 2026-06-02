@@ -15,81 +15,95 @@ model Session {
 }
 
 model User {
-  id          String        @id @default(uuid())
-  email       String        @unique
+  id          String         @id @default(uuid())
+  email       String         @unique
+  username    String         @unique
   password    String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  username    String        @unique
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
   leaderboard LeaderBoard[]
   logs        Logs[]
 }
 
 model Game {
-  id           String             @id @default(uuid())
-  level        Int                @unique @default(autoincrement())
-  difficulty   Difficulty
-  characters   CharactersOnGame[]
-  leaderboards LeaderBoard[]
-  logs         Logs[]
-  image        MainImage?
-  result       Results[]
+  id         String             @id @default(uuid())
+  level      Int                @unique
+  difficulty Difficulty
+
+  image      MainImage?
+  characters CharactersOnGame[]
+  results    Results[]
+  logs       Logs[]
+  leaderboard LeaderBoard[]
 }
 
 model MainImage {
-  id      String @id @unique @default(uuid())
+  id      String @id @default(uuid())
   src     String
+
   game_id String @unique
-  game    Game   @relation(fields: [game_id], references: [id])
+  game    Game   @relation(fields: [game_id], references: [id], onDelete: Cascade)
 }
 
 model Characters {
-  id      String             @id @unique @default(uuid())
-  name    String             @unique
-  image   String             @unique
+  id      String @id @default(uuid())
+  name    String @unique
+  image   String @unique
+
   games   CharactersOnGame[]
   results Results[]
 }
 
 model CharactersOnGame {
-  game_id   String
-  char_id   String
-  character Characters @relation(fields: [char_id], references: [id])
-  game      Game       @relation(fields: [game_id], references: [id])
+  game_id String
+  char_id String
+
+  game      Game       @relation(fields: [game_id], references: [id], onDelete: Cascade)
+  character Characters @relation(fields: [char_id], references: [id], onDelete: Cascade)
 
   @@id([game_id, char_id])
 }
 
 model Results {
-  id        String     @unique @default(uuid())
-  game_id   String
-  char_id   String
-  pos_x     Int
-  pos_y     Int
-  character Characters @relation(fields: [char_id], references: [id])
-  game      Game       @relation(fields: [game_id], references: [id])
+  id      String @id @default(uuid())
+
+  game_id String
+  char_id String
+
+  pos_x Float
+  pos_y Float
+
+  game      Game       @relation(fields: [game_id], references: [id], onDelete: Cascade)
+  character Characters @relation(fields: [char_id], references: [id], onDelete: Cascade)
 
   @@unique([game_id, char_id])
 }
 
 model Logs {
-  id      String   @unique @default(uuid())
+  id      String   @id @default(uuid())
+
   game_id String
   user_id String
+
   start   DateTime @default(now())
   end     DateTime
-  game    Game     @relation(fields: [game_id], references: [id])
-  user    User     @relation(fields: [user_id], references: [id])
+
+  game Game @relation(fields: [game_id], references: [id], onDelete: Cascade)
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model LeaderBoard {
-  id      String @unique @default(uuid())
+  id      String @id @default(uuid())
+
   user_id String
   game_id String
+
   comment String
   time    Int
-  game    Game   @relation(fields: [game_id], references: [id])
-  user    User   @relation(fields: [user_id], references: [id])
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  game Game @relation(fields: [game_id], references: [id], onDelete: Cascade)
 }
 
 enum Difficulty {
