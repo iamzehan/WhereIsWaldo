@@ -1,5 +1,5 @@
 interface CharacterPositions {
-    name: string;
+    char_id: string;
     x: number;
     y: number;
 }

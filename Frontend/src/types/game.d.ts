@@ -19,10 +19,18 @@ interface CharactersOnGame {
     character: Character;
 }
 
+interface ResultsOnGame{
+    game_id: string;
+    char_id: string;
+    pos_x: number;
+    pos_y: number;
+}
+
 interface Game {
     id: string;
     level: number;
     difficulty: Difficulty;
     image: Image | null;
-    characters: CharactersOnGame[]
+    results: ResultsOnGame[];
+    characters: CharactersOnGame[];
 }  
