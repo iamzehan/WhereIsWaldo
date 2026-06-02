@@ -9,7 +9,6 @@
     background: white;
     border-radius: 10px;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
     padding-bottom: 12px;
     display: flex;
     flex-direction: column;
