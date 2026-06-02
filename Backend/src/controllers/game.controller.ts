@@ -23,6 +23,7 @@ export const getAllGames = async (req: Request, res: Response) => {
 // Get one game level
 export const getOneGame = async (req: Request, res: Response) => {
   const { play, level } = req.query;
+  console.log(level)
 
   if (play !== "true") {
     return res.status(400).json({ message: "Invalid play mode" });
@@ -40,9 +41,11 @@ export const getOneGame = async (req: Request, res: Response) => {
       },
       include: {
         image: true,
+        results: true,
         characters: {
           include: {
             character: true,
+            
           },
         },
       },
