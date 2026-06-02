@@ -1,6 +1,7 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getOneGame } from "./requests.game";
+import { useAuth } from "./hooks";
 
 type GameContextType = {
   data: Game | null;
@@ -14,15 +15,12 @@ type GameContextType = {
 
 const GameContext = createContext<GameContextType | null>(null);
 
-export function GameProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function GameProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState<Game | null>(null);
   const [selected, setSelected] = useState<CharSelection[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [isError, setError] = useState(false);
+  const { accessToken } = useAuth();
 
   const [start] = useState(Date.now());
 
@@ -39,11 +37,12 @@ export function GameProvider({
 
       try {
         const lvl = level.split("+")[1];
-        
-        const res = await getOneGame(true, lvl);
+        if (accessToken) {
+          const res = await getOneGame(true, lvl, accessToken);
 
-        if (mounted) {
-          setData(res);
+          if (mounted) {
+            setData(res);
+          }
         }
       } catch {
         if (mounted) {
