@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { getDurationInSeconds, MatchCharacterPosition, playSound } from "../utils/helper";
 import { useGame, useIsMobile, useToast } from "../utils/hooks";
 
@@ -24,19 +23,16 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
   } = props;
 
   const isMobile = useIsMobile();
-  const { level } = useParams<string>();
   const toast = useToast();
   const {start} = useGame();
 
-  const handleSelect = (name: string, img:string) => {
+  const handleSelect = (name: string, char_id:string, img:string, ) => {
     if (!point || !data) return;
-
-    const lvl = parseInt(level?.split("+")[1] ?? "0", 10);
 
     const match = MatchCharacterPosition({
       data: {
-        level: lvl,
-        results: { name, x: point.x, y: point.y },
+        results: { char_id, x: point.x, y: point.y },
+        answers: data.results
       },
     });
 
@@ -77,7 +73,7 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
             !selected.find(sel=> sel.name===char.character.name) ? (
               <div
                 key={index}
-                onClick={() => handleSelect(char.character.name, char.character.image)}
+                onClick={() => handleSelect(char.character.name, char.char_id, char.character.image)}
                 className="px-3 py-2 border-b border-gray-200 first:rounded-t-[inherit] last:rounded-b-[inherit] last:border-b-0 hover:bg-gray-100 cursor-pointer flex items-center gap-4"
               >
                 <img
@@ -107,7 +103,7 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
               !selected.find(sel=> sel.name===char.character.name) ? (
                 <div
                   key={index}
-                  onClick={() => handleSelect(char.character.name, char.character.image)}
+                  onClick={() => handleSelect(char.character.name, char.char_id, char.character.image)}
                   className="px-3 py-3 border-b border-gray-200 last:border-b-0 active:bg-gray-100 cursor-pointer flex items-center justify-between"
                 >
                   <img
