@@ -2,6 +2,7 @@ import express from "express";
 import cors, {CorsOptions} from "cors";
 import helmet from "helmet";
 import compression from "compression";
+import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import routes from "./routes/index.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
@@ -33,7 +34,7 @@ const corsOptions: CorsOptions = {
 
 // Apply CORS
 app.use(cors(corsOptions));
-
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(sessionMiddleware);
