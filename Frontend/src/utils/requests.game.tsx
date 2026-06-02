@@ -14,13 +14,18 @@ export const getAllGames = async (): Promise<Array<Game>> => {
 export const getOneGame = async (
   play: boolean,
   level: string,
+  accessToken: string
 ): Promise<Game> => {
   const res = await fetch(
     `${env.VITE_BACKEND_URL}/api/game?play=${play}&level=${level}`,
     {
       method: "GET",
       credentials: "include",
+      headers: {
+      Authorization: `Bearer ${accessToken}`,
     },
+    },
+    
   );
   if(!res.ok){
     throw new Error();
