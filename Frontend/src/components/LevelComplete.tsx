@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useMemo, useState } from "react";
-import { useGame } from "../utils/hooks";
+import { useAuth, useGame } from "../utils/hooks";
 import { getDurationInSeconds } from "../utils/helper";
 
 import {
@@ -10,10 +10,18 @@ import {
   Share,
   Close,
 } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import { submitToLeaderBoard } from "../utils/requests.game";
+
+type Status = "Success" | "Error" | "Pending";
 
 export default function LevelCompletedDialog() {
-  const { complete, start } = useGame();
+  const { complete, start, data } = useGame();
+  const { accessToken } = useAuth();
+  const navigate = useNavigate();
 
+  const [submitting, setSubmit] = useState<boolean>(false);
+  const [status, setStatus] = useState<Status>();
   const [comment, setComment] = useState("");
   const [end, setEnd] = useState<number | null>(null);
 
@@ -27,8 +35,25 @@ export default function LevelCompletedDialog() {
   // total duration calculation
   const time = useMemo(() => {
     if (!start || !end) return null;
-    return getDurationInSeconds(start, end);
+    return getDurationInSeconds(+start, end);
   }, [start, end]);
+
+  // submit results
+  const submitResults = async () => {
+    try {
+      setSubmit(true);
+      setStatus("Pending");
+      if (data && end && accessToken)
+        await submitToLeaderBoard(data?.log_id, end, comment, accessToken);
+      setSubmit(false);
+      setStatus("Success");
+      return;
+    } catch (err) {
+      console.log(err);
+      setStatus("Error");
+      setSubmit(false);
+    }
+  };
 
   if (!complete) return null;
 
@@ -47,7 +72,6 @@ export default function LevelCompletedDialog() {
           <h2 className="text-xl font-semibold text-gray-900">
             Level completed
           </h2>
-
           <p className="mt-2 text-sm text-gray-500">
             You finished the level successfully
           </p>
@@ -58,6 +82,15 @@ export default function LevelCompletedDialog() {
               {time}s
             </div>
           )}
+          {/* Submit status */}
+          {status === "Error" ? (
+            <p className="text-red-600"> Couldn't Submit Data try again! </p>
+          ) : status === "Pending" ? (
+            <p className="text-yellow-500"> Pending... </p>
+          ) : status === "Success" ? (
+            <p className="text-green-500">Successfully submitted </p>
+          ) : null}
+          
         </div>
 
         {/* Body */}
@@ -90,17 +123,37 @@ export default function LevelCompletedDialog() {
 
         {/* Footer actions */}
         <div className="px-6 pb-6 space-y-3 *:hover:cursor-pointer">
-          <button className="w-full flex items-center justify-center gap-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 transition">
-            Submit and continue
+          <button
+            onClick={() => submitResults()}
+            disabled={submitting}
+            aria-disabled={submitting}
+            className={
+              "w-full flex items-center justify-center gap-5 rounded-xl font-medium py-3 transition " +
+              (submitting
+                ? "bg-emerald-400 text-white opacity-70 cursor-not-allowed"
+                : "bg-emerald-600 hover:bg-emerald-700 text-white")
+            }
+          >
+            {submitting ? "Submitting..." : "Submit and continue"}
             <Send fontSize="small" />
           </button>
 
-          <button className="w-full flex items-center justify-center gap-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 transition">
+          <button
+            className={
+              "w-full flex items-center justify-center gap-5 rounded-xl font-medium py-3 transition " +
+              (submitting
+                ? "bg-blue-400 text-white opacity-70 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 text-white")
+            }
+            disabled={submitting}
+            aria-disabled={submitting}
+          >
             Share result
             <Share fontSize="small" />
           </button>
 
           <button
+            onClick={() => navigate("/")}
             title="Close"
             className="
           absolute cursor-pointer top-5 right-5 border hover:text-red-500 rounded-full 
