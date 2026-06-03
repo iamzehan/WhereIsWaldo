@@ -86,8 +86,8 @@ model Logs {
   game_id String
   user_id String
 
-  start   DateTime @default(now())
-  end     DateTime
+  start   DateTime @default(now()) 
+  end     DateTime?
 
   game Game @relation(fields: [game_id], references: [id], onDelete: Cascade)
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -100,7 +100,7 @@ model LeaderBoard {
   game_id String
 
   comment String
-  time    Int
+  time    Float
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
   game Game @relation(fields: [game_id], references: [id], onDelete: Cascade)
