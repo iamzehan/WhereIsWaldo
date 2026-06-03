@@ -1,13 +1,3 @@
-import levels from "../data/levels";
-
-// Find the current level info
-export const getLevel = (level: number) => {
-  const result = levels.find((lvl) => {
-    return lvl.level === level;
-  });
-  return result;
-};
-
 // Rank Styles
 export function getRankStyle(rank: number) {
   switch (rank) {
