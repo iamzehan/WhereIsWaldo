@@ -4,7 +4,7 @@ const styles: Record<Difficulty, string> = {
   Hard: "bg-red-500 text-white",
 };
 
-export default function Badge({ level }: BadgeProps) {
+export default function Badge({level}: {level:Difficulty}) {
   return (
     <span
       className={`text-xs px-2 py-1 rounded-full font-medium ${styles[level]}`}
