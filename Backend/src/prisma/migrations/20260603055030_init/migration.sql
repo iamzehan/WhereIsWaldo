@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "LeaderBoard" ALTER COLUMN "time" SET DATA TYPE DOUBLE PRECISION;
