@@ -33,4 +33,6 @@ interface Game {
     image: Image | null;
     results: ResultsOnGame[];
     characters: CharactersOnGame[];
+    start: string;
+    log_id: string;
 }  
