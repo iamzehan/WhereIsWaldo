@@ -37,9 +37,10 @@ export default function CharactersDropDown({ props }: { props: PropsType }) {
     });
 
     if (match) {
+      if(!start) return;
       // eslint-disable-next-line react-hooks/purity
       const end = Date.now();
-      const time = getDurationInSeconds(start, end);
+      const time = getDurationInSeconds(+start, end);
       setSelected((prev) => [...prev, {name, time}]);
 
       toast(`You found ${name}`, "success", img);
