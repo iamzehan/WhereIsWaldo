@@ -8,11 +8,13 @@ type GameContextType = {
   selected: CharSelection[];
   setSelected: Setter<CharSelection[]>;
   complete: boolean;
-  start?: number | null;
+  start?: Date | null;
   end?: number | null;
   setEnd: Setter<number | null>; 
   isLoading: boolean;
   isError: boolean;
+  game_id?: string | null;
+  level?: string | null;
 };
 
 const GameContext = createContext<GameContextType | null>(null);
@@ -23,9 +25,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setLoading] = useState(true);
   const [isError, setError] = useState(false);
   const { accessToken } = useAuth();
+  const [game_id, setGameId] = useState<string|null>(null)
 
   // Start end
-  const [start, setStart] = useState<number | null>(null);
+  const [start, setStart] = useState<Date | null>(null);
   const [end, setEnd] = useState<number | null> (null);
 
   const { level } = useParams();
@@ -46,7 +49,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
           if (mounted) {
             setData(res);
-            setStart(Date.now())
+            
+            setStart(new Date(res.start))
+            setGameId(res.id)
           }
         }
       } catch {
@@ -83,6 +88,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         setEnd,
         isLoading,
         isError,
+        game_id,
+        level
       }}
     >
       {children}
