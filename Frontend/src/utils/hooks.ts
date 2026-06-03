@@ -52,3 +52,15 @@ export function useToast() {
   if (!ctx) throw new Error("useToast must be used inside ToastProvider");
   return ctx.toast;
 }
+
+// Auth Context Provider Hook
+import AuthContext from "./AuthContext";
+export function useAuth() {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+
+  return context;
+}

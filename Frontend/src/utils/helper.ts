@@ -30,27 +30,25 @@ export function getRankLabel(rank: number) {
   return `${rank}`;
 }
 
-// Distance Calculator
-import { results } from "../data/results";
+// Distance calculator
 
 export function MatchCharacterPosition({
   data,
 }: {
-  data: { level: number; results: CharacterPositions };
+  data: { results: CharacterPositions; answers:ResultsOnGame[] };
 }): boolean {
   const tolerance = 0.02;
-
-  const characterPosition = results
-    .find((res) => res.level === data.level)
-    ?.results.find((res) => res.name === data.results.name);
+  const {results, answers} = data;
+  const characterPosition = answers
+    .find((ans) => ans.char_id === results.char_id);
 
   if (!characterPosition) return false;
 
   const selectedX = data.results.x;
   const selectedY = data.results.y;
 
-  const actualX = characterPosition.x;
-  const actualY = characterPosition.y;
+  const actualX = characterPosition.pos_x;
+  const actualY = characterPosition.pos_y;
 
   const distX = selectedX - actualX;
   const distY = selectedY - actualY;

@@ -10,13 +10,13 @@ export default function AvailableChars() {
         isMobile ? "sticky top-0 gap-2" : ""
       }`}
     >
-      {data?.characters.map((chars) => {
-        const isSelected = selected.find(sel=> sel.name===chars.name);
+      {data?.characters.map((chars:CharactersOnGame) => {
+        const isSelected = selected.find(sel=> sel.name===chars.character.name);
         return (
-          <div key={chars.name} className="relative flex flex-col gap-1 items-center justify-center">
+          <div key={chars.character.id} className="relative flex flex-col gap-1 items-center justify-center">
             <img
-              src={chars.image}
-              alt={chars.name}
+              src={chars.character.image}
+              alt={chars.character.name}
               className={`h-15 bg-white shadow-sm border ${
                 isSelected ? "border-2 border-green-500 grayscale rounded-md " : "border-transparent rounded-full"
               }`}
