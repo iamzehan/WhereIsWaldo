@@ -1,6 +1,5 @@
 "use server";
 
-import levels from "../data/levels";
 import { getRankLabel, getRankStyle } from "../utils/helper";
 import { AccessTime } from "@mui/icons-material";
 import { useGame, useIsMobile } from "../utils/hooks";
@@ -15,19 +14,12 @@ interface LeaderboardEntry {
   comment?: string;
 }
 
-function normalize(name: string) {
-  return parseInt(name.split("+")[1]);
-}
-
 export default function Leaderboard() {
   const { game_id, level } = useGame();
   const [data, setData] = useState<LeaderboardEntry[] | null>(null);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isError, setError] = useState<boolean>(false);
   const isMobile = useIsMobile();
-  const currentLevel = levels.find(
-    (lvl) => lvl.level === normalize(level || ""),
-  );
 
   useEffect(() => {
     const fetchLeaderBoard = async () => {
@@ -45,7 +37,7 @@ export default function Leaderboard() {
     fetchLeaderBoard();
   }, [game_id]);
 
-  if (!currentLevel) {
+  if (!level) {
     return <p className="text-center mt-10">Level not found</p>;
   }
   if(isError){
@@ -58,7 +50,7 @@ export default function Leaderboard() {
     <div className="w-full mx-auto flex justify-center bg-white py-10">
       <div className="w-full xl:max-w-7xl md:max-w-5xl">
         <h1 className="text-2xl font-bold px-4 mb-6 text-black text-3xl!">
-          Level - {currentLevel.level} Leaderboard
+          Level - {level} Leaderboard
         </h1>
 
         {/* ================= MOBILE VIEW ================= */}
