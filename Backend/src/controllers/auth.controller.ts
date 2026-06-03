@@ -83,7 +83,7 @@ export const refresh =  (req: Request, res: Response) => {
 export const me = async (req: Request, res: Response) => {
   try {
     const user = await prisma.user.findUnique({
-      select: {username: true, email: true},
+      select: {id:true, username: true, email: true},
       where: {
         id:req.userId
       }
