@@ -32,7 +32,7 @@ export function LevelCardsSkeleton() {
   );
 }
 
-
+// Game Page Skeleton
 import { useIsMobile } from "../utils/hooks";
 
 export function GamePageSkeleton() {
@@ -43,7 +43,7 @@ export function GamePageSkeleton() {
       {/* AVAILABLE CHARS */}
       <div
         className={`flex w-full justify-center p-10 gap-10 ${
-          isMobile ? "sticky top-0 gap-2" : ""
+          isMobile ? "gap-2 flex-wrap" : ""
         }`}
       >
         {[...Array(4)].map((_, i) => (
@@ -62,7 +62,15 @@ export function GamePageSkeleton() {
         <div className="w-full max-w-7xl h-[500px] md:h-[700px] bg-gray-300 rounded-lg" />
       </div>
 
-      {/* LEADERBOARD */}
+      <LeaderBoardSkeleton/>
+    </div>
+  );
+}
+
+// Leaderboard Sekeleton
+export function LeaderBoardSkeleton() {
+  const isMobile = useIsMobile();
+  return (
       <div className="w-full mx-auto flex justify-center bg-white py-10">
         <div className="w-full xl:max-w-7xl md:max-w-5xl px-4 space-y-6">
           <div className="h-8 w-72 bg-gray-300 rounded" />
@@ -103,6 +111,5 @@ export function GamePageSkeleton() {
           )}
         </div>
       </div>
-    </div>
   );
 }
