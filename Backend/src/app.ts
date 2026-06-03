@@ -39,7 +39,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(sessionMiddleware);
 
-app.use(helmet());
+app.use((helmet as unknown as typeof import("helmet").default)());
 app.use(compression());
 app.use(morgan("dev"));
 
