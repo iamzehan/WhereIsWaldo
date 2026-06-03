@@ -1,15 +1,18 @@
-import { useParams } from "react-router-dom";
+"use server";
+
 import levels from "../data/levels";
 import { getRankLabel, getRankStyle } from "../utils/helper";
 import { AccessTime } from "@mui/icons-material";
-import { useIsMobile } from "../utils/hooks";
-
+import { useGame, useIsMobile } from "../utils/hooks";
+import { useEffect, useState } from "react";
+import { getLeaderBoard } from "../utils/requests.game";
+import GamePageError from "./GamePageError";
+import { LeaderBoardSkeleton } from "./Skeletons";
 interface LeaderboardEntry {
   rank: number;
   player: string;
   time: string;
   comment?: string;
-  date: string;
 }
 
 function normalize(name: string) {
@@ -17,47 +20,40 @@ function normalize(name: string) {
 }
 
 export default function Leaderboard() {
-  const { level } = useParams<{ level: string }>();
+  const { game_id, level } = useGame();
+  const [data, setData] = useState<LeaderboardEntry[] | null>(null);
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [isError, setError] = useState<boolean>(false);
   const isMobile = useIsMobile();
-
   const currentLevel = levels.find(
     (lvl) => lvl.level === normalize(level || ""),
   );
 
-  const data: LeaderboardEntry[] = [
-    {
-      rank: 1,
-      player: "Zia",
-      time: "00:45",
-      comment: "Too easy",
-      date: "2026-05-03",
-    },
-    {
-      rank: 2,
-      player: "Alex",
-      time: "01:10",
-      comment: "Nice level",
-      date: "2026-05-02",
-    },
-    {
-      rank: 3,
-      player: "Alex",
-      time: "01:10",
-      comment: "Nice level",
-      date: "2026-05-01",
-    },
-    {
-      rank: 4,
-      player: "Alex",
-      time: "01:10",
-      date: "2026-05-01",
-    },
-  ];
+  useEffect(() => {
+    const fetchLeaderBoard = async () => {
+      if (!game_id) return;
+      try {
+        setLoading(true);
+        const leaderboard = await getLeaderBoard(game_id);
+        setData(leaderboard)
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
+        setError(true);
+      }
+    };
+    fetchLeaderBoard();
+  }, [game_id]);
 
   if (!currentLevel) {
     return <p className="text-center mt-10">Level not found</p>;
   }
-
+  if(isError){
+    return <GamePageError message="Could not load leaderboard"/>
+  }
+  if(isLoading){
+    return <LeaderBoardSkeleton/>
+  }
   return (
     <div className="w-full mx-auto flex justify-center bg-white py-10">
       <div className="w-full xl:max-w-7xl md:max-w-5xl">
@@ -68,7 +64,7 @@ export default function Leaderboard() {
         {/* ================= MOBILE VIEW ================= */}
         {isMobile ? (
           <div className="space-y-3 px-4">
-            {data.map((row) => (
+            {data?.map((row) => (
               <div
                 key={row.rank}
                 className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col"
@@ -90,9 +86,6 @@ export default function Leaderboard() {
                 </div>
 
                 <div className="flex flex-row-reverse justify-between items-center text-sm">
-                  <span className="text-xs text-gray-400 text-right">
-                    {row.date}
-                  </span>
                   <span className="text-gray-500 flex items-center gap-1">
                     {row.time}s <AccessTime fontSize="small" />
                   </span>
@@ -116,12 +109,11 @@ export default function Leaderboard() {
                   <th className="px-6 py-3 text-left">Player</th>
                   <th className="px-6 py-3 text-left">Time</th>
                   <th className="px-6 py-3 text-left">Comment</th>
-                  <th className="px-6 py-3 text-left">Date</th>
                 </tr>
               </thead>
 
               <tbody className="divide-y divide-gray-100 bg-white">
-                {data.map((row) => (
+                {data?.map((row) => (
                   <tr
                     key={row.rank}
                     className="hover:bg-gray-100 transition-colors"
@@ -152,10 +144,6 @@ export default function Leaderboard() {
                     </td>
 
                     <td className="px-6 py-4 text-gray-600">{row.comment}</td>
-
-                    <td className="px-6 py-4 text-gray-400 text-xs">
-                      {row.date}
-                    </td>
                   </tr>
                 ))}
               </tbody>
