@@ -37,6 +37,7 @@ interface AccessTokenType {
 export const fetchProfile = async (data: AccessTokenType) => {
   const meRes = await fetch(`${env.VITE_BACKEND_URL}/api/auth/me`, {
     method: "GET",
+    credentials: "include",
     headers: {
       Authorization: `Bearer ${data.accessToken}`,
     },
